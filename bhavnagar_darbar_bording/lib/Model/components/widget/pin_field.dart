@@ -54,7 +54,7 @@ class _FilledState extends State<Filled> {
             width: 243,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: GradientsColors.melroseColor,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Pinput(
@@ -72,16 +72,39 @@ class _FilledState extends State<Filled> {
                   return null;
                 }
               },
-              separator: Container(
-                height: 64,
-                width: 1,
-                color: GradientsColors.oliveColor,
+              // separator: Container(
+              //   height: 64,
+              //   width: 1,
+              //   color: GradientsColors.oliveColor,
+              // ),
+              submittedPinTheme: defaultPinTheme.copyWith(
+                decoration: defaultPinTheme.decoration!.copyWith(
+                  color: Colors.transparent,
+                  //borderRadius: BorderRadius.circular(19),
+                  border: Border.all(color: GradientsColors.oliveColor),
+                ),
+              ),
+              separatorBuilder: (index) => const SizedBox(width: 8),
+              hapticFeedbackType: HapticFeedbackType.lightImpact,
+              cursor: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 9),
+                    width: 22,
+                    height: 1,
+                    color: GradientsColors.oliveColor,
+                  ),
+                ],
               ),
               defaultPinTheme: defaultPinTheme,
               showCursor: true,
               focusedPinTheme: defaultPinTheme.copyWith(
                 decoration:
                     const BoxDecoration(color: GradientsColors.dollyColor),
+              ),
+              errorPinTheme: defaultPinTheme.copyBorderWith(
+                border: Border.all(color: Colors.redAccent),
               ),
             ),
           ),

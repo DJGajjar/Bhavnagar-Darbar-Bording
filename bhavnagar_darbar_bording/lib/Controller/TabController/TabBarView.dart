@@ -1,13 +1,17 @@
+import 'package:bhavnagar_darbar_bording/Controller/TabController/MaterialView/MaterialViewController.dart';
+import 'package:bhavnagar_darbar_bording/Controller/TabController/MoreView/MoreViewController.dart';
+import 'package:bhavnagar_darbar_bording/Controller/TabController/PaperView/PaperViewController.dart';
+import 'package:bhavnagar_darbar_bording/Controller/TabController/TimeTableView/TimeTableViewController.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:bhavnagar_darbar_bording/Controller/TabController/ClubView/ClubViewController.dart';
 // import 'package:bhavnagar_darbar_bording/Controller/TabController/ClubView/CreateClubViewController.dart';
-import 'package:bhavnagar_darbar_bording/Controller/TabController/HomeView/HomeController.dart';
 // import 'package:bhavnagar_darbar_bording/Controller/TabController/LeagueView/LeagueFormsViewController.dart';
 // import 'package:bhavnagar_darbar_bording/Controller/TabController/LeagueView/LeagueViewController.dart';
 // import 'package:bhavnagar_darbar_bording/Controller/TabController/MyMatchesView/CreateMatchViewController.dart';
 // import 'package:bhavnagar_darbar_bording/Controller/TabController/MyMatchesView/MatchesViewController.dart';
 // import 'package:bhavnagar_darbar_bording/Controller/TabController/SettingView/SettingViewController.dart';
+import 'package:bhavnagar_darbar_bording/Controller/TabController/TimeTableView/TimeTableViewController.dart';
 import 'package:bhavnagar_darbar_bording/Extra/colors.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/textstyle.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -23,18 +27,17 @@ class _TabViewState extends State<TabView> {
   int _selectedIndex = 0;
   bool isAction = false;
 
-  String navTitle = 'Feed';
+  String navTitle = 'Time Table';
   String actionTitle = '';
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeViewController(),
-    // LeagueViewController(),
-    // ClubViewController(),
-    // MyMatchesViewController(),
-    // SettingViewController(),
+    TimeTableViewController(),
+    PaperViewController(),
+    MaterialViewController(),
+    MoreViewController(),
   ];
 
   void _onItemTapped(int index) {
@@ -43,35 +46,28 @@ class _TabViewState extends State<TabView> {
       switch (index) {
         case 0:
           {
-            navTitle = 'Feed';
+            navTitle = 'Time Table';
             isAction = false;
             actionTitle = '';
           }
           break;
         case 1:
           {
-            navTitle = 'League';
+            navTitle = 'Paper';
             isAction = true;
-            actionTitle = 'Create League';
+            actionTitle = 'Paper List';
           }
           break;
         case 2:
           {
-            navTitle = 'Club';
+            navTitle = 'Material';
             isAction = true;
-            actionTitle = 'Create Club';
+            actionTitle = 'Material List';
           }
           break;
         case 3:
           {
-            navTitle = 'Matches';
-            isAction = true;
-            actionTitle = 'Create Match';
-          }
-          break;
-        case 4:
-          {
-            navTitle = 'Setting';
+            navTitle = 'More';
             isAction = false;
             actionTitle = '';
           }
@@ -103,20 +99,20 @@ class _TabViewState extends State<TabView> {
                   ),
                   onPressed: () {
                     print('Click Club');
-                    if (actionTitle == 'Create League') {
+                    if (actionTitle == 'Paper') {
                       /*Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   TournamentFormsViewController()));*/
-                    } else if (actionTitle == 'Create Club') {
+                    } else if (actionTitle == 'Material') {
                       /*Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
                                 const CreateClubViewController()),
                       );*/
-                    } else if (actionTitle == 'Create Match') {
+                    } else if (actionTitle == 'More') {
                       /*Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -138,7 +134,7 @@ class _TabViewState extends State<TabView> {
         title: CustomeTextStyle(
           text: navTitle,
           size: 18,
-          color: GradientsColors.melroseColor,
+          color: Colors.white,
           wordSpacing: 1,
           fontWeight: FontWeight.w600,
         ),
@@ -172,7 +168,7 @@ class _TabViewState extends State<TabView> {
           selectedFontSize: 10,
           elevation: 10,
           selectedIconTheme: IconThemeData(
-            color: GradientsColors.melroseColor,
+            color: Colors.white,
             size: 22,
           ),
           selectedItemColor: Colors.white,
@@ -191,24 +187,32 @@ class _TabViewState extends State<TabView> {
           showUnselectedLabels: true,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Feed',
+              icon: ImageIcon(
+                AssetImage('assets/TabBar/icTimeTable.png'),
+                color: GradientsColors.dollyColor,
+              ),
+              label: 'Time Table',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: 'League',
+              icon: ImageIcon(
+                AssetImage('assets/TabBar/icPaper.png'),
+                color: GradientsColors.dollyColor,
+              ), //Icon(Icons.school)
+              label: 'Paper',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.school),
-              label: 'Club',
+              icon: ImageIcon(
+                AssetImage('assets/TabBar/icMaterial.png'),
+                color: GradientsColors.dollyColor,
+              ),
+              label: 'Material',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.padding_rounded),
-              label: 'Matches',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_sharp),
-              label: 'Setting',
+              icon: ImageIcon(
+                AssetImage('assets/TabBar/icMore.png'),
+                color: GradientsColors.dollyColor,
+              ),
+              label: 'More',
             ),
           ],
           currentIndex: _selectedIndex,

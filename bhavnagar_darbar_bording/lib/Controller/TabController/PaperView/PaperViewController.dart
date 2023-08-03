@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:bhavnagar_darbar_bording/Extra/colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class HomeViewController extends StatelessWidget {
-  const HomeViewController({Key? key}) : super(key: key);
+class PaperViewController extends StatelessWidget {
+  const PaperViewController({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
