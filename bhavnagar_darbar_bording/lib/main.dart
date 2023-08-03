@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
       title: 'BhavnagarDarbarBording',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: GradientsColors.blackRussianColor,
+        scaffoldBackgroundColor:
+            Colors.white, //GradientsColors.blackRussianColor,
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       home: SplashView(),
@@ -79,8 +80,8 @@ class SplashScreen extends State<SplashView> {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  // builder: (context) => TabView(),
-                  builder: (context) => UserInfoView(),
+                  builder: (context) => TabView(),
+                  // builder: (context) => UserInfoView(),
                 ));
           } else {
             Navigator.pushReplacement(

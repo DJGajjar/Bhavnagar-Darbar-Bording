@@ -175,15 +175,15 @@ class _TabViewState extends State<TabView> {
             color: GradientsColors.melroseColor,
             size: 22,
           ),
-          selectedItemColor: GradientsColors.melroseColor,
+          selectedItemColor: Colors.white,
           selectedLabelStyle: TextStyle(
             fontWeight: FontWeight.bold,
-            color: GradientsColors.melroseColor,
+            color: Colors.white,
           ),
           unselectedIconTheme: IconThemeData(
-            color: GradientsColors.jaggerColor,
+            color: GradientsColors.dollyColor,
           ),
-          unselectedItemColor: GradientsColors.jaggerColor,
+          unselectedItemColor: GradientsColors.dollyColor,
 
           type: BottomNavigationBarType.fixed,
           backgroundColor: GradientsColors.blackRussianColor,
