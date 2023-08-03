@@ -79,7 +79,7 @@ class _FilledState extends State<Filled> {
               // ),
               submittedPinTheme: defaultPinTheme.copyWith(
                 decoration: defaultPinTheme.decoration!.copyWith(
-                  color: Colors.transparent,
+                  color: GradientsColors.oliveColor,
                   //borderRadius: BorderRadius.circular(19),
                   border: Border.all(color: GradientsColors.oliveColor),
                 ),
