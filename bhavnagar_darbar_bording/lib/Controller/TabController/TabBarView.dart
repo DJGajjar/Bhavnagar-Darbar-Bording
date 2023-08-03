@@ -54,15 +54,15 @@ class _TabViewState extends State<TabView> {
         case 1:
           {
             navTitle = 'Paper';
-            isAction = true;
-            actionTitle = 'Paper List';
+            isAction = false;
+            actionTitle = '';
           }
           break;
         case 2:
           {
             navTitle = 'Material';
-            isAction = true;
-            actionTitle = 'Material List';
+            isAction = false;
+            actionTitle = '';
           }
           break;
         case 3:

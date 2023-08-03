@@ -48,6 +48,7 @@ dependencies:
   sticky_headers: "^0.3.0"
   getwidget: ^3.0.1
   phone_number: ^1.0.0
+  webview_flutter: ^4.2.2
 
 dev_dependencies:
   flutter_test:
