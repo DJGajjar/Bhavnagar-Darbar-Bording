@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/rounded_button.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/pin_field.dart';
 import 'package:intl/intl.dart';
 

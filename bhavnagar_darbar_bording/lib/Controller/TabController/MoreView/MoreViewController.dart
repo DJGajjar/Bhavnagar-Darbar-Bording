@@ -20,7 +20,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/rounded_button.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/pin_field.dart';
 import 'package:intl/intl.dart';
 
@@ -79,30 +78,6 @@ class _MoreViewController extends State<MoreViewController> {
       itemCount: arrSettingList.length,
       itemBuilder: (context, index) {
         return ListTile(
-          leading: CircleAvatar(
-            backgroundColor: arrSettingList[index]['optionIcon'] != ""
-                ? GradientsColors.dollyColor
-                : Colors.transparent,
-            child: Container(
-              decoration: BoxDecoration(
-                color: arrSettingList[index]['optionIcon'] != ""
-                    ? GradientsColors.dollyColor
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(20.0),
-                border: Border.all(
-                  color: arrSettingList[index]['optionIcon'] != ""
-                      ? GradientsColors.dollyColor
-                      : Colors.transparent,
-                ),
-                image: DecorationImage(
-                  image: AssetImage(
-                      arrSettingList[index]['optionIcon'].toString()),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              // alignment: Alignment.bottomRight,
-            ),
-          ),
           title: CustomeTextStyle(
             text: arrSettingList[index]['optionTitle'].toString(),
             size: 16,

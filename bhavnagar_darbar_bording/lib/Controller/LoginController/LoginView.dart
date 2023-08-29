@@ -13,6 +13,16 @@ import 'package:bhavnagar_darbar_bording/Model/components/widget/textstyle.dart'
 import 'package:velocity_x/velocity_x.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phone_number/phone_number.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart';
+import 'package:bhavnagar_darbar_bording/Extra/Constant.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:bhavnagar_darbar_bording/Extra/APIService.dart';
+import 'package:bhavnagar_darbar_bording/Model/UserDetail/UserModelList.dart';
+import 'package:bhavnagar_darbar_bording/Model/UserDetail/UserDetail.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:bhavnagar_darbar_bording/Extra/loading_overlay_alt.dart';
 
 class LoginViewController extends StatefulWidget {
   const LoginViewController({Key? key}) : super(key: key);
@@ -65,13 +75,19 @@ class _LoginViewControllerState extends State<LoginViewController>
   final countryPicker = FlCountryCodePicker();
   CountryCode? countryCode;
 
+  final HttpService _apiClient = HttpService();
+
   late String strCountryName = '+91 India';
   late String strCountryCode = '+91';
 
   late AnimationController addToCartPopUpAnimationController;
 
   String strMobileNumber = '';
+  String strMsg = '';
   bool isMobileNumberNull = false;
+
+  var isDataSubmitting = false;
+  var isDataReadingCompleted = false;
 
   @override
   void initState() {
@@ -82,6 +98,52 @@ class _LoginViewControllerState extends State<LoginViewController>
   }
 
   final formGlobalKey = GlobalKey<FormState>();
+
+  void loginWithPhoneNumber(String mobileNumber) async {
+    isDataSubmitting = true;
+
+    // LoadingOverlayAlt.of(context).show();
+
+    try {
+      Response response = await post(
+        Uri.parse(BaseURL.login),
+        body: {
+          'mobilenumber': mobileNumber,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Login Succes');
+
+        var responseData = jsonDecode(response.body)['userdata'];
+
+        isDataSubmitting = false;
+
+        // Map<String, dynamic> responseData = jsonDecode(response.body.toString());
+
+        UserDataList.user_id = UserDetail.fromJson(responseData).user_id;
+        UserDataList.isuserdetails =
+            UserDetail.fromJson(responseData).isuserdetails;
+        UserDataList.isverify = UserDetail.fromJson(responseData).isverify;
+        UserDataList.username = UserDetail.fromJson(responseData).username;
+        UserDataList.city = UserDetail.fromJson(responseData).city;
+        UserDataList.mobilenumber =
+            UserDetail.fromJson(responseData).mobilenumber;
+
+        isDataReadingCompleted = true;
+
+        // LoadingOverlayAlt.of(context).hide();
+
+        print('MobileNumberU: ${UserDataList.isverify}');
+      } else {
+        isDataSubmitting = false;
+        print('Failed');
+      }
+    } catch (e) {
+      isDataSubmitting = false;
+      print(e.toString());
+    }
+  }
 
   @override
   void dispose() {
@@ -198,12 +260,13 @@ class _LoginViewControllerState extends State<LoginViewController>
                           );
                         } else {
                           if (strMobileNumber.length == 10) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OtpPage(Filled()),
-                              ),
-                            );
+                            loginWithPhoneNumber(strMobileNumber);
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => OtpPage(Filled()),
+                            //   ),
+                            // );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

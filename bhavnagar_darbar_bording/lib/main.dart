@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bhavnagar_darbar_bording/Controller/TabController/TabBarView.dart';
 import 'dart:async';
 import 'package:bhavnagar_darbar_bording/Controller/LoginController/UserInfoView.dart';
+import 'package:bhavnagar_darbar_bording/Extra/loading_overlay_alt.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +44,9 @@ class SplashScreen extends State<SplashView> {
     // TODO: implement initState
     super.initState();
     whereToGo();
+    // LoadingOverlayAlt(
+    //   child: LoginViewController(),
+    // );
   }
 
   @override
