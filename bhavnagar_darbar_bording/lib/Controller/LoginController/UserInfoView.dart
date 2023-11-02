@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:bhavnagar_darbar_bording/Extra/Constant.dart';
+import 'package:bhavnagar_darbar_bording/Model/UserDetail/UserDetail.dart';
+import 'package:bhavnagar_darbar_bording/Model/UserDetail/UserModelList.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +15,17 @@ import 'package:bhavnagar_darbar_bording/Model/components/widget/center_widget.d
 import 'package:bhavnagar_darbar_bording/Model/components/widget/pin_field.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/rounded_button.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/textstyle.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../Controller/TabController/TabBarView.dart';
+import 'package:get_storage/get_storage.dart';
+
+import '../../Model/UserDetail/UpdateUserDetail.dart';
+import '../../Model/UserDetail/UpdateUserModelList.dart';
+import '../../main.dart';
 
 class UserInfoView extends StatefulWidget {
   @override
@@ -19,6 +33,19 @@ class UserInfoView extends StatefulWidget {
 }
 
 class _UserInfoView extends State<UserInfoView> {
+  late TextEditingController txtMobileNumber;
+
+  String strFullName = '';
+  String strCity = '';
+
+  bool isSendOTP = false;
+
+  var isDataSubmitting = false;
+  var isDataReadingCompleted = false;
+
+  final formGlobalKey = GlobalKey<FormState>();
+  final userInfoToken = GetStorage();
+
   Widget topWidget(double screenWidth) {
     return Transform.rotate(
       angle: -35 * math.pi / 180,
@@ -58,21 +85,155 @@ class _UserInfoView extends State<UserInfoView> {
     );
   }
 
-  late TextEditingController txtMobileNumber;
-
-  String strFullName = '';
-  String strCity = '';
-
-  bool isSendOTP = false;
-
-  final formGlobalKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
     txtMobileNumber = TextEditingController();
     txtMobileNumber.text = '9898989895';
   }
+
+  void loginWithUserInfoPhoneNumber(String fullname, String city) async {
+    isDataSubmitting = true;
+
+    print('Method Call Update Profile');
+
+    String strToken = userInfoToken.read('Token');
+
+    print('strToken: $strToken');
+    print('FullNmae: $fullname');
+    print('City: $city');
+
+    try {
+      Response response = await http.post(
+        Uri.parse(BaseURL.updateProfile),
+        headers: {
+          "Authorization": strToken,
+        },
+        body: {
+          'full_name': fullname,
+          'city': city,
+        },
+      );
+
+      final responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+      print('Value Of Responce: $responseJson');
+
+      if (response.statusCode == 200) {
+        print('update Profile Succes');
+
+        isDataSubmitting = false;
+
+        Map<String, dynamic> responseData =
+            jsonDecode(response.body.toString());
+
+        print('Response Data: ${responseData['status']}');
+
+        if (responseData['status'] == 0) {
+          print(
+              'Display Alert Msg: ${UpdateUserDetail.fromJson(responseData).message}');
+        } else {
+          print('Value Call');
+          var responseData = jsonDecode(response.body)['data'];
+          print('Value Call: $responseData');
+
+          UpdateUserDetailList.student_id =
+              UpdateUserDetail.fromJson(responseData).student_id;
+          UpdateUserDetailList.full_name =
+              UpdateUserDetail.fromJson(responseData).full_name;
+          UpdateUserDetailList.city =
+              UpdateUserDetail.fromJson(responseData).city;
+          UpdateUserDetailList.mobile_number =
+              UpdateUserDetail.fromJson(responseData).mobile_number;
+          UpdateUserDetailList.status =
+              UpdateUserDetail.fromJson(responseData).status;
+          UpdateUserDetailList.is_profile_completed =
+              UpdateUserDetail.fromJson(responseData).is_profile_completed;
+
+          if (UpdateUserDetailList.is_profile_completed == '1') {
+            var sharedPref = await SharedPreferences.getInstance();
+            sharedPref.setBool(SplashScreen.USERLOGIN, true);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TabView(),
+              ),
+            );
+          } else {}
+        }
+
+        isDataReadingCompleted = true;
+
+        // LoadingOverlayAlt.of(context).hide();
+
+        print('MobileNumberU: ${UpdateUserDetailList.mobile_number}');
+      } else {
+        isDataSubmitting = false;
+        print('Failed');
+      }
+    } catch (e) {
+      isDataSubmitting = false;
+      print(e.toString());
+    }
+  }
+  /*void loginWithUserInfoPhoneNumber(String fullname, String city) async {
+    isDataSubmitting = true;
+
+    String strToken = userInfoToken.read('Token');
+
+    print('FullNmae: $fullname');
+    print('City: $city');
+
+    try {
+      Response response = await post(
+        Uri.parse(BaseURL.updateProfile),
+        headers: {"Authorization": strToken},
+        body: {
+          'full_name': fullname,
+          'city': city,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Login Info Detail Succes');
+
+        var responseData = jsonDecode(response.body)['data'];
+
+        isDataSubmitting = false;
+
+        UserDataList.student_id = UserDetail.fromJson(responseData).student_id;
+        UserDataList.full_name = UserDetail.fromJson(responseData).full_name;
+        UserDataList.city = UserDetail.fromJson(responseData).city;
+        UserDataList.mobile_number =
+            UserDetail.fromJson(responseData).mobile_number;
+        UserDataList.status = UserDetail.fromJson(responseData).status;
+        UserDataList.is_profile_completed =
+            UserDetail.fromJson(responseData).is_profile_completed;
+
+        isDataReadingCompleted = true;
+
+        // LoadingOverlayAlt.of(context).hide();
+
+        print('MobileNumberU: ${UserDataList.mobile_number}');
+
+        if (UserDataList.is_profile_completed == '1') {
+          var sharedPref = await SharedPreferences.getInstance();
+          sharedPref.setBool(SplashScreen.USERLOGIN, true);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TabView(),
+            ),
+          );
+        } else {}
+      } else {
+        isDataSubmitting = false;
+        print('Failed');
+      }
+    } catch (e) {
+      isDataSubmitting = false;
+      print(e.toString());
+    }
+  }*/
 
   @override
   void dispose() {
@@ -234,12 +395,8 @@ class _UserInfoView extends State<UserInfoView> {
                             ),
                           );
                         } else {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TabView(),
-                            ),
-                          );
+                          print('Enter Condition View');
+                          loginWithUserInfoPhoneNumber(strFullName, strCity);
                         }
                       } else {
                         print('Validation mobile number');

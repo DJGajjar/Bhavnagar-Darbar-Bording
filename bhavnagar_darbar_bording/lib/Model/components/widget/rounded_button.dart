@@ -56,7 +56,11 @@ class _RoundedButtonState extends State<RoundedButton> {
                 onPressed: () {
                   widget.callback!();
                 },
-                child: CircularProgressIndicator(),
+                child: Text(
+                  widget.btnName,
+                  style: widget.btnStyle,
+                  textAlign: TextAlign.end,
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: widget.btnBGColor,
                   shadowColor: widget.btnBGColor,

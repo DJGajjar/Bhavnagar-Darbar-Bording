@@ -9,6 +9,7 @@ import 'package:bhavnagar_darbar_bording/Model/components/widget/center_widget.d
 import 'package:bhavnagar_darbar_bording/Model/components/widget/pin_field.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/rounded_button.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/textstyle.dart';
+import 'package:get_storage/get_storage.dart';
 //import 'package:bhavnagar_darbar_bording/Model/textfields.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,9 @@ import 'package:bhavnagar_darbar_bording/Model/UserDetail/UserDetail.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:bhavnagar_darbar_bording/Extra/loading_overlay_alt.dart';
 
+import '../TabController/TabBarView.dart';
+import 'UserInfoView.dart';
+
 class LoginViewController extends StatefulWidget {
   const LoginViewController({Key? key}) : super(key: key);
 
@@ -33,6 +37,24 @@ class LoginViewController extends StatefulWidget {
 
 class _LoginViewControllerState extends State<LoginViewController>
     with TickerProviderStateMixin {
+  final countryPicker = FlCountryCodePicker();
+  CountryCode? countryCode;
+
+  final HttpService _apiClient = HttpService();
+  final userInfoToken = GetStorage();
+
+  late String strCountryName = '+91 India';
+  late String strCountryCode = '+91';
+
+  late AnimationController addToCartPopUpAnimationController;
+
+  String strMobileNumber = '';
+  String strMsg = '';
+  bool isMobileNumberNull = false;
+
+  var isDataSubmitting = false;
+  var isDataReadingCompleted = false;
+
   Widget topWidget(double screenWidth) {
     return Transform.rotate(
       angle: -35 * math.pi / 180,
@@ -72,23 +94,6 @@ class _LoginViewControllerState extends State<LoginViewController>
     );
   }
 
-  final countryPicker = FlCountryCodePicker();
-  CountryCode? countryCode;
-
-  final HttpService _apiClient = HttpService();
-
-  late String strCountryName = '+91 India';
-  late String strCountryCode = '+91';
-
-  late AnimationController addToCartPopUpAnimationController;
-
-  String strMobileNumber = '';
-  String strMsg = '';
-  bool isMobileNumberNull = false;
-
-  var isDataSubmitting = false;
-  var isDataReadingCompleted = false;
-
   @override
   void initState() {
     addToCartPopUpAnimationController = AnimationController(
@@ -108,33 +113,60 @@ class _LoginViewControllerState extends State<LoginViewController>
       Response response = await post(
         Uri.parse(BaseURL.login),
         body: {
-          'mobilenumber': mobileNumber,
+          'mobile_number': mobileNumber,
         },
       );
 
       if (response.statusCode == 200) {
         print('Login Succes');
 
-        var responseData = jsonDecode(response.body)['userdata'];
-
         isDataSubmitting = false;
 
-        // Map<String, dynamic> responseData = jsonDecode(response.body.toString());
+        Map<String, dynamic> responseData =
+            jsonDecode(response.body.toString());
 
-        UserDataList.user_id = UserDetail.fromJson(responseData).user_id;
-        UserDataList.isuserdetails =
-            UserDetail.fromJson(responseData).isuserdetails;
-        UserDataList.isverify = UserDetail.fromJson(responseData).isverify;
-        UserDataList.username = UserDetail.fromJson(responseData).username;
-        UserDataList.city = UserDetail.fromJson(responseData).city;
-        UserDataList.mobilenumber =
-            UserDetail.fromJson(responseData).mobilenumber;
+        print('Response Data: ${responseData['status']}');
+
+        if (responseData['status'] == 0) {
+          print(
+              'Display Alert Msg: ${UserDetail.fromJson(responseData).message}');
+        } else {
+          print('Value Call');
+          var responseData = jsonDecode(response.body)['data'];
+
+          UserDataList.student_id =
+              UserDetail.fromJson(responseData).student_id;
+          UserDataList.full_name = UserDetail.fromJson(responseData).full_name;
+          UserDataList.city = UserDetail.fromJson(responseData).city;
+          UserDataList.mobile_number =
+              UserDetail.fromJson(responseData).mobile_number;
+          UserDataList.status = UserDetail.fromJson(responseData).status;
+          UserDataList.is_profile_completed =
+              UserDetail.fromJson(responseData).is_profile_completed;
+          UserDataList.token = UserDetail.fromJson(responseData).token;
+
+          userInfoToken.write('Token', UserDataList.token);
+
+          if (UserDataList.is_profile_completed == '0') {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserInfoView(),
+                ));
+          } else {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TabView(),
+                ));
+          }
+        }
 
         isDataReadingCompleted = true;
 
         // LoadingOverlayAlt.of(context).hide();
 
-        print('MobileNumberU: ${UserDataList.isverify}');
+        print('MobileNumberU: ${UserDataList.token}');
       } else {
         isDataSubmitting = false;
         print('Failed');

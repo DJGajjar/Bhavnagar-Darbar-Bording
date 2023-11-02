@@ -2,45 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:ffi';
 
-// List<User> userFromJson(String str) =>
-//     List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
-// String userToJson(List<User> data) =>
-//     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
-/*class User {
-  User({
-    required this.isverify,
-    required this.isuserdetails,
-    required this.username,
-    required this.city,
-    required this.mobilenumber,
-    required this.user_id,
-  });
-  bool isverify;
-  bool isuserdetails;
-  String username;
-  String city;
-  String mobilenumber;
-  int user_id;
-
-  factory User.fromJson(Map<String, dynamic> json) => User(
-      isverify: json["isverify"],
-      isuserdetails: json["isuserdetails"],
-      username: json["username"],
-      city: json["city"],
-      mobilenumber: json["mobilenumber"],
-      user_id: json["user_id"]);
-  Map<String, dynamic> toJson() => {
-        "isverify": isverify,
-        "isuserdetails": isuserdetails,
-        "username": username,
-        "city": city,
-        "mobilenumber": mobilenumber,
-        "user_id": user_id
-      };
-}*/
-
-class UserDetail {
+class UpdateUserDetail {
   final String message;
   final String student_id;
   final String full_name;
@@ -48,8 +10,7 @@ class UserDetail {
   final String mobile_number;
   final String status;
   final String is_profile_completed;
-  final String token;
-  UserDetail({
+  UpdateUserDetail({
     required this.message,
     required this.student_id,
     required this.full_name,
@@ -57,10 +18,9 @@ class UserDetail {
     required this.mobile_number,
     required this.status,
     required this.is_profile_completed,
-    required this.token,
   });
 
-  UserDetail copyWith({
+  UpdateUserDetail copyWith({
     String? message,
     String? student_id,
     String? full_name,
@@ -68,9 +28,8 @@ class UserDetail {
     String? mobile_number,
     String? status,
     String? is_profile_completed,
-    String? token,
   }) {
-    return UserDetail(
+    return UpdateUserDetail(
       message: message ?? this.message,
       student_id: student_id ?? this.student_id,
       full_name: full_name ?? this.full_name,
@@ -78,7 +37,6 @@ class UserDetail {
       mobile_number: mobile_number ?? this.mobile_number,
       status: status ?? this.status,
       is_profile_completed: is_profile_completed ?? this.is_profile_completed,
-      token: token ?? this.token,
     );
   }
 
@@ -91,13 +49,12 @@ class UserDetail {
       'mobile_number': mobile_number,
       'status': status,
       'is_profile_completed': is_profile_completed,
-      'token': token,
     };
   }
 
   // factory UserDetail.fromMap(Map<String, dynamic> map) {
-  factory UserDetail.fromJson(Map<String, dynamic> json) {
-    return UserDetail(
+  factory UpdateUserDetail.fromJson(Map<String, dynamic> json) {
+    return UpdateUserDetail(
       message: json['message'] ?? '',
       student_id: json['student_id'] ?? '',
       full_name: json['full_name'] ?? '',
@@ -105,7 +62,6 @@ class UserDetail {
       mobile_number: json['mobile_number'] ?? '',
       status: json['status'].toString() ?? '0',
       is_profile_completed: json['is_profile_completed'] ?? '',
-      token: json['token'] ?? '',
     );
   }
 
@@ -116,21 +72,20 @@ class UserDetail {
 
   @override
   String toString() {
-    return 'UserDetail(message: $message, student_id:$student_id, full_name:$full_name, city:$city, mobile_number:$mobile_number, status: $status, is_profile_completed:$is_profile_completed, token:$token)';
+    return 'UserDetail(message: $message, student_id:$student_id, full_name:$full_name, city:$city, mobile_number:$mobile_number, status: $status, is_profile_completed:$is_profile_completed)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is UserDetail &&
+    return other is UpdateUserDetail &&
         other.message == message &&
         other.student_id == student_id &&
         other.full_name == full_name &&
         other.city == city &&
         other.mobile_number == mobile_number &&
         other.status == status &&
-        other.is_profile_completed == is_profile_completed &&
-        other.token == token;
+        other.is_profile_completed == is_profile_completed;
   }
 
   @override
@@ -141,7 +96,6 @@ class UserDetail {
         city.hashCode ^
         mobile_number.hashCode ^
         status.hashCode ^
-        is_profile_completed.hashCode.hashCode ^
-        token.hashCode;
+        is_profile_completed.hashCode.hashCode;
   }
 }

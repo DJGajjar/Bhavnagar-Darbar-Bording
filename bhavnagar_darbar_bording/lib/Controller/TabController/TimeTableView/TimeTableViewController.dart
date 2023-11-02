@@ -1,12 +1,15 @@
+import 'package:bhavnagar_darbar_bording/Model/TimeTable/TimeTableDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bhavnagar_darbar_bording/Extra/colors.dart';
+import 'package:http/http.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:bhavnagar_darbar_bording/Model/TimeTable/TimeTableList.dart';
-import 'package:bhavnagar_darbar_bording/Model/TimeTable/TimeTableDetailList.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/textstyle.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:grouped_list/grouped_list.dart';
+
+import '../../../Extra/Constant.dart';
 
 class TimeTableViewController extends StatefulWidget {
   const TimeTableViewController({Key? key}) : super(key: key);
@@ -17,6 +20,46 @@ class TimeTableViewController extends StatefulWidget {
 }
 
 class _TimeTableViewControllerState extends State<TimeTableViewController> {
+  var isApiCAll = 'No';
+
+  List<TimeTableDetail>? timeTable = <TimeTableDetail>[];
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('API CAll State');
+
+    isApiCAll = 'Yes';
+    getTimeTableDataList();
+  }
+
+  void getTimeTableDataList() async {
+    try {
+      Response response = await get(
+        Uri.parse(BaseURL.scheduleList),
+        // body: {
+        //   'mobile_number': mobileNumber,
+        // },
+      );
+
+      if (response.statusCode == 200) {
+        isApiCAll = 'No';
+        print('Schedule Call Success');
+
+        timeTable = TimeTableDetail.fromJson(response as Map<String, dynamic>)
+            as List<TimeTableDetail>?;
+        print('Name: ${timeTable?.length}');
+      } else {
+        isApiCAll = 'No';
+        print('Failed');
+      }
+    } catch (e) {
+      isApiCAll = 'No';
+      print('Error Shoe: ${e.toString()}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // final List<TimeTableDetailList> arrSquadsList =
@@ -56,7 +99,327 @@ class _TimeTableViewControllerState extends State<TimeTableViewController> {
       },
     ];
 
-    return Column(
+    final dataList = [
+      {
+        "schedule_date": "2, Nov 2023",
+        "schedule_day": "Thursday",
+        "schedule": [
+          {
+            "id": "5",
+            "faculty_name": "Kapil",
+            "subject_name": "Science",
+            "class_time": "12:00 PM",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "schedule_date": "3, Nov 2023",
+        "schedule_day": "Friday",
+        "schedule": [
+          {
+            "id": "6",
+            "faculty_name": "Darshan",
+            "subject_name": "General Knowledge",
+            "class_time": "02:00 PM",
+            "note": "Test"
+          }
+        ]
+      },
+      {
+        "schedule_date": "4, Nov 2023",
+        "schedule_day": "Saturday",
+        "schedule": [
+          {
+            "id": "7",
+            "faculty_name": "Divyesh",
+            "subject_name": "Maths",
+            "class_time": "08:00 AM",
+            "note": "Maths"
+          },
+          {
+            "id": "8",
+            "faculty_name": "Kapil",
+            "subject_name": "Science",
+            "class_time": "10:00 AM",
+            "note": "Science"
+          },
+          {
+            "id": "9",
+            "faculty_name": "Darshan",
+            "subject_name": "General Knowledge",
+            "class_time": "02:00 PM",
+            "note": "General Knowledge"
+          }
+        ]
+      },
+    ];
+    final elements = [
+      {'group': 'Team A', 'name': 'Dar'},
+      {'group': 'Team B', 'name': 'Dar'},
+      {'group': 'Team C', 'name': 'Dar'},
+      {'group': 'Team A', 'name': 'Dar'},
+      {'group': 'Team B', 'name': 'Dar'},
+      {'group': 'Team C', 'name': 'Dar'},
+      {'group': 'Team A', 'name': 'Dar'},
+      {'group': 'Team B', 'name': 'Dar'},
+      {'group': 'Team C', 'name': 'Dar'},
+      {'group': 'Team A', 'name': 'Dar'},
+      {'group': 'Team B', 'name': 'Dar'},
+      {'group': 'Team C', 'name': 'Dar'},
+    ];
+
+    return isApiCAll == 'No'
+        ? Center(
+            child: CircularProgressIndicator(
+              color: Colors.orange,
+              backgroundColor: Colors.red,
+            ),
+          )
+        : GroupedListView<dynamic, String>(
+            elements: dataList,
+            groupBy: (element) =>
+                element['schedule_date'] + ' ' + element['schedule_day'],
+            groupComparator: (value1, value2) => value2.compareTo(value1),
+            itemComparator: (item1, item2) =>
+                item1['schedule_date'].compareTo(item2['schedule_day']),
+            order: GroupedListOrder.DESC,
+            useStickyGroupSeparators: true,
+            groupSeparatorBuilder: (String value) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            itemBuilder: (context, index) {
+              return Container(
+                height: MediaQuery.of(context).size.height - 240,
+                child: ListView.separated(
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      print('Index Total Count: $index');
+                      return InkWell(
+                        focusColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap: () {},
+                        child: Container(
+                          width: double.infinity,
+                          height: 126,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 30,
+                                width: double.infinity,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: Container(
+                                        height: 30,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0.0, left: 10.0, right: 5.0),
+                                          child: CustomeTextStyle(
+                                            text: 'Faculty Name:',
+                                            size: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: GradientsColors
+                                                .blackRussianColor,
+                                            wordSpacing: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 9,
+                                      child: Container(
+                                        height: 30,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 10, top: 3),
+                                          child: RichText(
+                                            textAlign: TextAlign.left,
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: 'Test',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: GradientsColors
+                                                        .melroseColor,
+                                                    wordSpacing: 1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 30,
+                                width: double.infinity,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        height: 30,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0.0, left: 10.0, right: 5.0),
+                                          child: CustomeTextStyle(
+                                            text: 'Subject:',
+                                            size: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: GradientsColors
+                                                .blackRussianColor,
+                                            wordSpacing: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 11,
+                                      child: Container(
+                                        height: 30,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 10, top: 3),
+                                          child: RichText(
+                                            textAlign: TextAlign.left,
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: 'test',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: GradientsColors
+                                                        .melroseColor,
+                                                    wordSpacing: 1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 30,
+                                width: double.infinity,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        height: 30,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0.0, left: 10.0, right: 5.0),
+                                          child: CustomeTextStyle(
+                                            text: 'Time:',
+                                            size: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: GradientsColors
+                                                .blackRussianColor,
+                                            wordSpacing: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 11,
+                                      child: Container(
+                                        height: 30,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 10, top: 3),
+                                          child: RichText(
+                                            textAlign: TextAlign.left,
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: 'test',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: GradientsColors
+                                                        .melroseColor,
+                                                    wordSpacing: 1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 0.5,
+                                color: GradientsColors.oliveColor,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5.0, left: 10.0, right: 10.0),
+                                child: Container(
+                                  height: 30,
+                                  width: double.infinity,
+                                  child: CustomeTextStyle(
+                                    text: 'test',
+                                    size: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: GradientsColors.dollyColor,
+                                    wordSpacing: 2,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                        thickness: 1,
+                        color: GradientsColors.dollyColor,
+                      );
+                    }),
+              );
+              //   Card(
+              //   elevation: 8.0,
+              //   margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+              //   child: SizedBox(
+              //     child: ListTile(
+              //       contentPadding:
+              //           const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              //       leading: const Icon(Icons.account_circle),
+              //       title: Text('Index Count:' + index.toString()),
+              //       trailing: const Icon(Icons.arrow_forward),
+              //     ),
+              //   ),
+              // );
+            },
+          );
+    /*Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
@@ -328,6 +691,6 @@ class _TimeTableViewControllerState extends State<TimeTableViewController> {
               }),
         ),
       ],
-    );
+    );*/
   }
 }
