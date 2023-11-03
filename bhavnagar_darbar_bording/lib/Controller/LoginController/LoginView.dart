@@ -10,6 +10,7 @@ import 'package:bhavnagar_darbar_bording/Model/components/widget/pin_field.dart'
 import 'package:bhavnagar_darbar_bording/Model/components/widget/rounded_button.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/textstyle.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:bhavnagar_darbar_bording/Model/textfields.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,6 +26,7 @@ import 'package:bhavnagar_darbar_bording/Model/UserDetail/UserDetail.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:bhavnagar_darbar_bording/Extra/loading_overlay_alt.dart';
 
+import '../../main.dart';
 import '../TabController/TabBarView.dart';
 import 'UserInfoView.dart';
 
@@ -145,7 +147,8 @@ class _LoginViewControllerState extends State<LoginViewController>
               UserDetail.fromJson(responseData).is_profile_completed;
           UserDataList.token = UserDetail.fromJson(responseData).token;
 
-          userInfoToken.write('Token', UserDataList.token);
+          var sharedPref = await SharedPreferences.getInstance();
+          sharedPref.setString(SplashScreen.TOKEN, UserDataList.token);
 
           if (UserDataList.is_profile_completed == '0') {
             Navigator.pushReplacement(
@@ -154,6 +157,8 @@ class _LoginViewControllerState extends State<LoginViewController>
                   builder: (context) => UserInfoView(),
                 ));
           } else {
+            var sharedPref = await SharedPreferences.getInstance();
+            sharedPref.setBool(SplashScreen.USERLOGIN, true);
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

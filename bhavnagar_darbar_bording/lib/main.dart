@@ -38,6 +38,7 @@ class SplashView extends StatefulWidget {
 
 class SplashScreen extends State<SplashView> {
   static const String USERLOGIN = "Login";
+  static const String TOKEN = "Token";
 
   @override
   void initState() {

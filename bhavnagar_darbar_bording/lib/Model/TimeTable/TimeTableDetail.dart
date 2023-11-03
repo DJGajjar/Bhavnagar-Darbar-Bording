@@ -5,6 +5,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'TimeTableModelList.dart';
 
 class TimeTableDetail {
+  String? message;
+
   String? schedule_date;
 
   String? schedule_day;
