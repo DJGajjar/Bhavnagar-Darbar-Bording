@@ -27,6 +27,7 @@ class TimeTableViewController extends StatefulWidget {
 
 class _TimeTableViewControllerState extends State<TimeTableViewController> {
   var isApiCAll = 'No';
+  var isDataFound = 'Yes';
 
   List<TimeTableDetail>? timeTable = <TimeTableDetail>[];
 
@@ -64,6 +65,7 @@ class _TimeTableViewControllerState extends State<TimeTableViewController> {
         print(
             'Display Alert Msg: ${TimeTableDetail.fromJson(responseData).message}');
         isApiCAll = 'No';
+        isDataFound = 'No';
         setState(() => {});
       } else {
         var responseData = jsonDecode(response.body)['data'];
@@ -381,291 +383,323 @@ class _TimeTableViewControllerState extends State<TimeTableViewController> {
                   backgroundColor: Colors.blue,
                 ),
               )
-            : ListView.builder(
-                itemCount: timeTable!.length.toInt(),
-                itemBuilder: (context, index) {
-                  return StickyHeader(
-                    header: Container(
-                      height: 35,
+            : isDataFound == 'No'
+                ? Center(
+                    child: CustomeTextStyle(
+                      text: 'Time Table Data Not Found',
+                      size: 16,
+                      fontWeight: FontWeight.w500,
                       color: GradientsColors.melroseColor,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 10, top: 7),
-                                  child: Container(
-                                    child: CustomeTextStyle(
-                                      text: timeTable![index]
-                                          .schedule_date
-                                          .toString(),
-                                      size: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      wordSpacing: 2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 10, top: 7),
-                                  child: Container(
-                                    child: CustomeTextStyle(
-                                      text: timeTable![index]
-                                          .schedule_day
-                                          .toString(),
-                                      size: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      wordSpacing: 2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                      wordSpacing: 2,
                     ),
-                    content: Container(
-                      width: double.infinity,
-                      height: timeTable![index].schedule!.length.toInt() == 1
-                          ? (126 * timeTable![index].schedule!.length.toInt()) +
-                              0
-                          : (126 * timeTable![index].schedule!.length.toInt()) +
-                              35,
-                      // color: Colors.red,
-                      child: ListView.separated(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: timeTable![index].schedule!.length.toInt(),
-                        itemBuilder: (context, subIndex) {
-                          return Column(
+                  )
+                : ListView.builder(
+                    itemCount: timeTable!.length.toInt(),
+                    itemBuilder: (context, index) {
+                      return StickyHeader(
+                        header: Container(
+                          height: 35,
+                          color: GradientsColors.melroseColor,
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                height: 30,
-                                width: double.infinity,
+                              Expanded(
+                                flex: 1,
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      flex: 5,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, top: 7),
                                       child: Container(
-                                        height: 30,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 0.0, left: 10.0, right: 5.0),
-                                          child: CustomeTextStyle(
-                                            text: 'Faculty Name:',
-                                            size: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: GradientsColors
-                                                .blackRussianColor,
-                                            wordSpacing: 2,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 9,
-                                      child: Container(
-                                        height: 30,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 10, top: 3),
-                                          child: RichText(
-                                            textAlign: TextAlign.left,
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: timeTable![index]
-                                                      .schedule![subIndex]
-                                                          ['faculty_name']
-                                                      .toString(),
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: GradientsColors
-                                                        .melroseColor,
-                                                    wordSpacing: 1,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                        child: CustomeTextStyle(
+                                          text: timeTable![index]
+                                              .schedule_date
+                                              .toString(),
+                                          size: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                          wordSpacing: 2,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Container(
-                                height: 30,
-                                width: double.infinity,
+                              Expanded(
+                                flex: 1,
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Expanded(
-                                      flex: 3,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 10, top: 7),
                                       child: Container(
-                                        height: 30,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 0.0, left: 10.0, right: 5.0),
-                                          child: CustomeTextStyle(
-                                            text: 'Subject:',
-                                            size: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: GradientsColors
-                                                .blackRussianColor,
-                                            wordSpacing: 2,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 11,
-                                      child: Container(
-                                        height: 30,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 10, top: 3),
-                                          child: RichText(
-                                            textAlign: TextAlign.left,
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: timeTable![index]
-                                                      .schedule![subIndex]
-                                                          ['subject_name']
-                                                      .toString(),
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: GradientsColors
-                                                        .melroseColor,
-                                                    wordSpacing: 1,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                        child: CustomeTextStyle(
+                                          text: timeTable![index]
+                                              .schedule_day
+                                              .toString(),
+                                          size: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                          wordSpacing: 2,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Container(
-                                height: 30,
-                                width: double.infinity,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        height: 30,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 0.0, left: 10.0, right: 5.0),
-                                          child: CustomeTextStyle(
-                                            text: 'Time:',
-                                            size: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: GradientsColors
-                                                .blackRussianColor,
-                                            wordSpacing: 2,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 11,
-                                      child: Container(
-                                        height: 30,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 10, top: 3),
-                                          child: RichText(
-                                            textAlign: TextAlign.left,
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: timeTable![index]
-                                                      .schedule![subIndex]
-                                                          ['class_time']
-                                                      .toString(),
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: GradientsColors
-                                                        .melroseColor,
-                                                    wordSpacing: 1,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: 0.5,
-                                color: GradientsColors.oliveColor,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 5.0, left: 10.0, right: 10.0),
-                                child: Container(
-                                  height: 30,
-                                  width: double.infinity,
-                                  child: CustomeTextStyle(
-                                    text: timeTable![index]
-                                                .schedule![subIndex]['note']
-                                                .toString() ==
-                                            ''
-                                        ? 'Note: -'
-                                        : 'Note: ' +
-                                            timeTable![index]
-                                                .schedule![subIndex]['note']
-                                                .toString(),
-                                    size: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: GradientsColors.dollyColor,
-                                    wordSpacing: 2,
-                                  ),
-                                ),
-                              )
                             ],
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            thickness: 1,
-                            color: GradientsColors.dollyColor,
-                          );
-                        },
-                      ),
-                    ),
+                          ),
+                        ),
+                        content: Container(
+                          width: double.infinity,
+                          height:
+                              timeTable![index].schedule!.length.toInt() == 1
+                                  ? (126 *
+                                          timeTable![index]
+                                              .schedule!
+                                              .length
+                                              .toInt()) +
+                                      0
+                                  : (126 *
+                                          timeTable![index]
+                                              .schedule!
+                                              .length
+                                              .toInt()) +
+                                      35,
+                          // color: Colors.red,
+                          child: ListView.separated(
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount:
+                                timeTable![index].schedule!.length.toInt(),
+                            itemBuilder: (context, subIndex) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    width: double.infinity,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 5,
+                                          child: Container(
+                                            height: 30,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 0.0,
+                                                  left: 10.0,
+                                                  right: 5.0),
+                                              child: CustomeTextStyle(
+                                                text: 'Faculty Name:',
+                                                size: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: GradientsColors
+                                                    .blackRussianColor,
+                                                wordSpacing: 2,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 9,
+                                          child: Container(
+                                            height: 30,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10, top: 3),
+                                              child: RichText(
+                                                textAlign: TextAlign.left,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: timeTable![index]
+                                                          .schedule![subIndex]
+                                                              ['faculty_name']
+                                                          .toString(),
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: GradientsColors
+                                                            .melroseColor,
+                                                        wordSpacing: 1,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: double.infinity,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            height: 30,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 0.0,
+                                                  left: 10.0,
+                                                  right: 5.0),
+                                              child: CustomeTextStyle(
+                                                text: 'Subject:',
+                                                size: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: GradientsColors
+                                                    .blackRussianColor,
+                                                wordSpacing: 2,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 11,
+                                          child: Container(
+                                            height: 30,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10, top: 3),
+                                              child: RichText(
+                                                textAlign: TextAlign.left,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: timeTable![index]
+                                                          .schedule![subIndex]
+                                                              ['subject_name']
+                                                          .toString(),
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: GradientsColors
+                                                            .melroseColor,
+                                                        wordSpacing: 1,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: double.infinity,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            height: 30,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 0.0,
+                                                  left: 10.0,
+                                                  right: 5.0),
+                                              child: CustomeTextStyle(
+                                                text: 'Time:',
+                                                size: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: GradientsColors
+                                                    .blackRussianColor,
+                                                wordSpacing: 2,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 11,
+                                          child: Container(
+                                            height: 30,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10, top: 3),
+                                              child: RichText(
+                                                textAlign: TextAlign.left,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: timeTable![index]
+                                                          .schedule![subIndex]
+                                                              ['class_time']
+                                                          .toString(),
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: GradientsColors
+                                                            .melroseColor,
+                                                        wordSpacing: 1,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 0.5,
+                                    color: GradientsColors.oliveColor,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 5.0, left: 10.0, right: 10.0),
+                                    child: Container(
+                                      height: 30,
+                                      width: double.infinity,
+                                      child: CustomeTextStyle(
+                                        text: timeTable![index]
+                                                    .schedule![subIndex]['note']
+                                                    .toString() ==
+                                                ''
+                                            ? 'Note: -'
+                                            : 'Note: ' +
+                                                timeTable![index]
+                                                    .schedule![subIndex]['note']
+                                                    .toString(),
+                                        size: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: GradientsColors.dollyColor,
+                                        wordSpacing: 2,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider(
+                                thickness: 1,
+                                color: GradientsColors.dollyColor,
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   );
-                },
-              );
   }
 }
 

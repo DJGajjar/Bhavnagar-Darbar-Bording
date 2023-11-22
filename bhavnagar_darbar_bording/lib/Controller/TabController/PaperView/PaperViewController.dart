@@ -27,6 +27,7 @@ class _PaperViewController extends State<PaperViewController> {
   bool isSelected = false;
 
   var isApiCAll = 'No';
+  var isDataFound = 'No';
 
   bool isPageEnd = false;
 
@@ -76,6 +77,8 @@ class _PaperViewController extends State<PaperViewController> {
       } else {
         var responseData = jsonDecode(response.body)['data']['papers'];
         print('Responce: ${responseData}');
+
+        isDataFound = 'Yes';
 
         paperMaterialList = responseData
             .map((paperMaterialList) =>
@@ -131,50 +134,60 @@ class _PaperViewController extends State<PaperViewController> {
                       backgroundColor: Colors.blue,
                     ),
                   )
-                : ListView.separated(
-                    itemCount: paperMaterialStoreList!.length.toInt(),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: CustomeTextStyle(
-                          text: paperMaterialStoreList![index]
-                              .subject_name
-                              .toString(),
+                : isDataFound == 'No'
+                    ? Center(
+                        child: CustomeTextStyle(
+                          text: 'Paper Data Not Found',
                           size: 16,
                           fontWeight: FontWeight.w500,
                           color: GradientsColors.melroseColor,
                           wordSpacing: 2,
                         ),
-                        subtitle: CustomeTextStyle(
-                          text: paperMaterialStoreList![index]
-                              .created_on
-                              .toString(),
-                          size: 10,
-                          fontWeight: FontWeight.w500,
-                          color: GradientsColors.melroseColor,
-                          wordSpacing: 2,
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          color: GradientsColors.dollyColor,
-                        ),
-                        onTap: () {
-                          print('Click To Navigation: $index');
+                      )
+                    : ListView.separated(
+                        itemCount: paperMaterialStoreList!.length.toInt(),
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: CustomeTextStyle(
+                              text: paperMaterialStoreList![index]
+                                  .subject_name
+                                  .toString(),
+                              size: 16,
+                              fontWeight: FontWeight.w500,
+                              color: GradientsColors.melroseColor,
+                              wordSpacing: 2,
+                            ),
+                            subtitle: CustomeTextStyle(
+                              text: paperMaterialStoreList![index]
+                                  .created_on
+                                  .toString(),
+                              size: 10,
+                              fontWeight: FontWeight.w500,
+                              color: GradientsColors.melroseColor,
+                              wordSpacing: 2,
+                            ),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios,
+                              color: GradientsColors.dollyColor,
+                            ),
+                            onTap: () {
+                              print('Click To Navigation: $index');
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    PaperShowViewController()),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PaperShowViewController()),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        thickness: 0.5,
-                        color: GradientsColors.dollyColor,
-                      );
-                    },
-                  )));
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                            thickness: 0.5,
+                            color: GradientsColors.dollyColor,
+                          );
+                        },
+                      )));
   }
 }

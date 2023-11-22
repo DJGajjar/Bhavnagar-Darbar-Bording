@@ -8,4 +8,5 @@ class BaseURL {
   static String get updateProfile => baseAPI + '/auth/update_profile';
   static String get scheduleList => baseAPI + '/schedule/list';
   static String get paperList => baseAPI + '/papers/list?offset=';
+  static String get materialsList => baseAPI + '/materials/list?offset=';
 }
