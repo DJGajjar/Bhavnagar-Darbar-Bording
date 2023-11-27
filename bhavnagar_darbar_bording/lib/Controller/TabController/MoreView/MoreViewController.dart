@@ -22,7 +22,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/rounded_button.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/pin_field.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 
 class MoreViewController extends StatefulWidget {
   const MoreViewController({Key? key}) : super(key: key);
@@ -73,9 +73,9 @@ class _MoreViewController extends State<MoreViewController> {
     },
   ];
 
-  void _shareAppLink(String text) {
-    Share.share(text);
-  }
+  // void _shareAppLink(String text) {
+  //   Share.share(text);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class _MoreViewController extends State<MoreViewController> {
             } else if (strAction == 'Contact Us') {
             } else if (strAction == 'Support') {
             } else if (strAction == 'Share') {
-              _shareAppLink('Hello, Application Link Share');
+              // _shareAppLink('Hello, Application Link Share');
             } else if (strAction == 'Rate') {
             } else if (strAction == 'Log Out') {}
           },

@@ -60,7 +60,7 @@ class SplashScreen extends State<SplashView> {
             fit: BoxFit.cover,
           ),
           // gradient: LinearGradient(
-          //   begin: Alignment.bottomRight,
+          //   begin: Alignment.bottomRight,`
           //   end: Alignment.centerRight,
           //   colors: <Color>[
           //     GradientsColors.blackRussianColor,

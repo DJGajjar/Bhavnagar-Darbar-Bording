@@ -12,7 +12,7 @@ import 'package:sticky_headers/sticky_headers.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:bhavnagar_darbar_bording/Model/components/widget/textstyle.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:grouped_list/grouped_list.dart';
+// import 'package:grouped_list/grouped_list.dart';
 
 import '../../../Extra/Constant.dart';
 import '../../../main.dart';
